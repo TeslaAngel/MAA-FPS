@@ -109,6 +109,11 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 			"To clear the current chat tab (private chats get closed):\n" +
 			"\t<color=#E07B00>\\clear</color>";
 
+    [Space]
+    public Transform PicturePanelSpawnPoint;
+    public GameObject PicturePanelPrefab;
+    public PictureTransformer pictureTransformer;
+
 
 	public void Start()
 	{
@@ -214,7 +219,17 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 	}
 
 
-	public int TestLength = 2048;
+    public void OnClickSendPicture()
+    {
+        if (this.InputFieldChat != null)
+        {
+            this.SendChatMessage("StringPicture"+pictureTransformer.Texture2dToBase64(this.InputFieldChat.text));
+            this.InputFieldChat.text = "";
+        }
+    }
+
+
+    public int TestLength = 2048;
 	private byte[] testBytes = new byte[2048];
 
 	private void SendChatMessage(string inputLine)
@@ -601,9 +616,40 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 			return;
 		}
 
+        string SP = "StringPicture";
+        if (channel.ToStringMessages().Contains(SP))
+        {
+            int NS = channel.ToStringMessages().IndexOf(SP, 0) + SP.Length;
+            string IS = channel.ToStringMessages().Substring(NS);
+            Debug.Log(IS);
+
+            Instantiate(PicturePanelPrefab, PicturePanelSpawnPoint.transform.position,PicturePanelSpawnPoint.rotation,CurrentChannelText.transform);
+            PictureTransformer PPPT = PicturePanelPrefab.GetComponent<PictureTransformer>();
+
+            string dummyData = IS.Trim().Replace("%", "").Replace(",", "").Replace(" ", "+");
+            if (dummyData.Length % 4 > 0)
+            {
+                dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
+            }
+
+            PPPT.ToImageString = dummyData;
+            PPPT.channelTag = channelName;
+
+            channel.Messages.RemoveAt(1);
+        }
+
 		this.selectedChannelName = channelName;
 		this.CurrentChannelText.text = channel.ToStringMessages();
 		Debug.Log("ShowChannel: " + this.selectedChannelName);
+
+        GameObject[] EPictures = GameObject.FindGameObjectsWithTag("NetImage"); 
+        for(int I = 0; I < EPictures.Length; I++)
+        {
+            if (EPictures[I].GetComponent<PictureTransformer>().channelTag == channelName)
+                EPictures[I].GetComponent<Image>().enabled = true;
+            else
+                EPictures[I].GetComponent<Image>().enabled = false;
+        }
 
 		foreach (KeyValuePair<string, Toggle> pair in this.channelToggles)
 		{
