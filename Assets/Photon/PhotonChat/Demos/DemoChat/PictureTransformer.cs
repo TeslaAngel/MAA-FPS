@@ -60,7 +60,11 @@ public class PictureTransformer : MonoBehaviour
             //string ffp = Base64ToTexture2d(ToImageString);
             Base64ToTexture2d(ToImageString);
             Sprite sprite = Sprite.Create(RP, new Rect(0, 0, RP.width, RP.height),new Vector2(0.5f, 0.5f),100);
-            GetComponent<Image>().overrideSprite = sprite;
+            if (GetComponent<Image>() != null)
+                GetComponent<Image>().overrideSprite = sprite;
+            else if(GetComponent<RawImage>()!=null)
+                GetComponent<RawImage>().texture = RP;
+            //GetComponent<Image>().material.mainTexture = RP;
         }
     }
 }

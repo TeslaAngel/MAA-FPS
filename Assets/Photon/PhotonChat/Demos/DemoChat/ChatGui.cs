@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 using Photon.Chat;
 
@@ -61,8 +62,9 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 	public RectTransform ChatPanel;     // set in inspector (to enable/disable panel)
 	public GameObject UserIdFormPanel;
 	public InputField InputFieldChat;   // set in inspector
-	public Text CurrentChannelText;     // set in inspector
-	public Toggle ChannelToggleToInstantiate; // set in inspector
+    //public Text CurrentChannelText;
+    public TMP_Text CurrentChannelText;     // set in inspector
+    public Toggle ChannelToggleToInstantiate; // set in inspector
 
 
 	public GameObject FriendListUiItemtoInstantiate;
@@ -113,6 +115,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
     public Transform PicturePanelSpawnPoint;
     public GameObject PicturePanelPrefab;
     public PictureTransformer pictureTransformer;
+    public bool ReCheckingPictureElement = false;
 
 
 	public void Start()
@@ -197,6 +200,14 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 		}
 
 		this.StateText.gameObject.SetActive(this.ShowState); // this could be handled more elegantly, but for the demo it's ok.
+
+        if (CurrentChannelText.text.Contains("StringPicture") && ReCheckingPictureElement == false)
+        {
+            ShowChannel(this.selectedChannelName);
+            ReCheckingPictureElement = true;
+        }
+        else
+            ReCheckingPictureElement = false;
 	}
 
 
@@ -533,8 +544,12 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 		{
 			// update text
 		    this.ShowChannel(this.selectedChannelName);
-		}
-	}
+            //if (CurrentChannelText.text.Contains("StringPicture"))
+            //{
+            //    ShowChannel(this.selectedChannelName);
+            //}
+        }
+    }
 
 	public void OnPrivateMessage(string sender, object message, string channelName)
 	{
@@ -619,7 +634,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
         string SP = "StringPicture";
         if (channel.ToStringMessages().Contains(SP))
         {
-            int NS = channel.ToStringMessages().IndexOf(SP, 0) + SP.Length;
+            int NS = channel.ToStringMessages().IndexOf(SP,0) + SP.Length;
             string IS = channel.ToStringMessages().Substring(NS);
             Debug.Log(IS);
 
@@ -635,7 +650,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
             PPPT.ToImageString = dummyData;
             PPPT.channelTag = channelName;
 
-            channel.Messages.RemoveAt(1);
+            channel.Messages.RemoveAt(channel.MessageCount-1);
         }
 
 		this.selectedChannelName = channelName;
@@ -655,14 +670,14 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 		{
 			pair.Value.isOn = pair.Key == channelName ? true : false;
 		}
+
+        print(channel.ToStringMessages());
 	}
 
 	public void OpenDashboard()
 	{
 		Application.OpenURL("https://dashboard.photonengine.com");
 	}
-
-
 
 
 }
