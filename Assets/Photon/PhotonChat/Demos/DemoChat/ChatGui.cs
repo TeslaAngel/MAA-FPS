@@ -640,6 +640,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 
             Instantiate(PicturePanelPrefab, PicturePanelSpawnPoint.transform.position,PicturePanelSpawnPoint.rotation,CurrentChannelText.transform);
             PictureTransformer PPPT = PicturePanelPrefab.GetComponent<PictureTransformer>();
+            
 
             string dummyData = IS.Trim().Replace("%", "").Replace(",", "").Replace(" ", "+");
             if (dummyData.Length % 4 > 0)

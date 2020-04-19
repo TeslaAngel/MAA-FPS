@@ -65,6 +65,23 @@ public class PictureTransformer : MonoBehaviour
             else if(GetComponent<RawImage>()!=null)
                 GetComponent<RawImage>().texture = RP;
             //GetComponent<Image>().material.mainTexture = RP;
+
+        }
+
+        GameObject[] AImages = GameObject.FindGameObjectsWithTag("NetImage");
+        for(int I = 0; I < AImages.Length; I++)
+        {
+            if (AImages[I] == gameObject)
+                return;
+            if(AImages[I].GetComponent<PictureTransformer>().channelTag==channelTag && AImages[I].GetComponent<RectTransform>().anchoredPosition.x == GetComponent<RectTransform>().anchoredPosition.x)
+            {
+                if (Math.Abs(AImages[I].GetComponent<RectTransform>().anchoredPosition.y - GetComponent<RectTransform>().anchoredPosition.y) < 64)
+                {
+                    GetComponent<RectTransform>().anchoredPosition = new Vector2(AImages[I].GetComponent<RectTransform>().anchoredPosition.x+128, GetComponent<RectTransform>().anchoredPosition.y);
+                    print("Move");
+                }
+            }
         }
     }
+    
 }
