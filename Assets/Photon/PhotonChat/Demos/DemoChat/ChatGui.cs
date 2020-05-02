@@ -116,6 +116,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
     public GameObject PicturePanelPrefab;
     public PictureTransformer pictureTransformer;
     public bool ReCheckingPictureElement = false;
+    public bool ReCheckingMessageOrigin = false;
 
 
 	public void Start()
@@ -133,6 +134,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 		if (string.IsNullOrEmpty(this.UserName))
 		{
 		    this.UserName = "user" + Environment.TickCount%99; //made-up username
+            LocalGlobal.UserName = UserName;
 		}
 
         #if PHOTON_UNITY_NETWORKING
@@ -216,8 +218,11 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 		if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
 		{
 		    this.SendChatMessage(this.InputFieldChat.text);
-			this.InputFieldChat.text = "";
-		}
+            this.SendChatMessage("SetLastSender" + UserName);
+
+            this.InputFieldChat.text = "";
+            ReCheckingMessageOrigin = true;
+        }
 	}
 
 	public void OnClickSend()
@@ -225,7 +230,10 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 		if (this.InputFieldChat != null)
 		{
 		    this.SendChatMessage(this.InputFieldChat.text);
-			this.InputFieldChat.text = "";
+            this.SendChatMessage("SetLastSender" + UserName);
+
+            this.InputFieldChat.text = "";
+            ReCheckingMessageOrigin = true;
 		}
 	}
 
@@ -236,6 +244,7 @@ public class ChatGui : MonoBehaviour, IChatClientListener
         {
             this.SendChatMessage("StringPicture"+pictureTransformer.Texture2dToBase64(this.InputFieldChat.text));
             this.InputFieldChat.text = "";
+            
         }
     }
 
@@ -245,7 +254,10 @@ public class ChatGui : MonoBehaviour, IChatClientListener
 
 	private void SendChatMessage(string inputLine)
 	{
-		if (string.IsNullOrEmpty(inputLine))
+        UserName = LocalGlobal.UserName;
+        this.chatClient.AuthValues = new AuthenticationValues(this.UserName);
+
+        if (string.IsNullOrEmpty(inputLine))
 		{
 			return;
 		}
@@ -651,10 +663,31 @@ public class ChatGui : MonoBehaviour, IChatClientListener
             PPPT.ToImageString = dummyData;
             PPPT.channelTag = channelName;
 
+            UserName = LocalGlobal.UserName;
+            this.chatClient.AuthValues = new AuthenticationValues(this.UserName);
+
+            if (channel.ToStringMessages().Contains(SP))
             channel.Messages.RemoveAt(channel.MessageCount-1);
         }
 
-		this.selectedChannelName = channelName;
+        if(channel.MessageCount - 1>=0)
+        if(channel.Senders[channel.MessageCount-1]!=LocalGlobal.UserName && ReCheckingMessageOrigin==true)
+        {
+            channel.Senders[channel.MessageCount - 1] = UserName;
+        }
+        ReCheckingMessageOrigin = false;
+
+        if (channel.ToStringMessages().Contains("SetLastSender"))
+        {
+            int NSS = channel.ToStringMessages().IndexOf("SetLastSender", 0) + "SetLastSender".Length;
+            string SenderName = channel.ToStringMessages().Substring(NSS);
+
+            channel.Messages.RemoveAt(channel.MessageCount - 1);
+            channel.Senders[channel.MessageCount - 1] = SenderName;
+        }
+
+
+        this.selectedChannelName = channelName;
 		this.CurrentChannelText.text = channel.ToStringMessages();
 		Debug.Log("ShowChannel: " + this.selectedChannelName);
 
