@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FPSPlayerManager : MonoBehaviour
 {
+    public float WalkingSpeed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +19,7 @@ public class FPSPlayerManager : MonoBehaviour
         {
             //GetComponent<Rigidbody>().AddRelativeForce(0, 500*Time.deltaTime, 7000*Time.deltaTime);
             //print(GetComponent<Rigidbody>().velocity);
-            GetComponent<Rigidbody>().
+            transform.Translate(0, 0, WalkingSpeed*Time.deltaTime);
         }
     }
 }
