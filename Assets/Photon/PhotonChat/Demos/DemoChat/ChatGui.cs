@@ -18,6 +18,12 @@ using Photon.Chat;
 using Photon.Pun;
 #endif
 
+public class ChatGuiAddon
+{
+    public static List<string> PictureBytes = new List<string>();
+    public static int PictureIndex = 0;
+}
+
 /// <summary>
 /// This simple Chat UI demonstrate basics usages of the Chat Api
 /// </summary>
@@ -660,8 +666,14 @@ public class ChatGui : MonoBehaviour, IChatClientListener
                 dummyData = dummyData.PadRight(dummyData.Length + 4 - dummyData.Length % 4, '=');
             }
 
-            PPPT.ToImageString = dummyData;
-            PPPT.channelTag = channelName;
+            
+            //print(ChatGuiAddon.PictureBytes.Count + "Count");
+            ChatGuiAddon.PictureBytes.Add(dummyData);
+            //PPPT.PictureNumber = ChatGuiAddon.PictureBytes.Count;
+            //ChatGuiAddon.PictureIndex += 1;
+            //PPPT.PictureNumber = ChatGuiAddon.PictureIndex;
+            PPPT.ToImageString = dummyData;//setting image string
+            PPPT.channelTag = channelName;//setting channel
 
             UserName = LocalGlobal.UserName;
             this.chatClient.AuthValues = new AuthenticationValues(this.UserName);

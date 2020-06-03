@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Photon/PhotonChat/Demos/DemoChat/DemoChat-Scene.unity
     guid: ec07267f6a28fb044ac89845274e79af
-  - enabled: 1
+  - enabled: 0
     path: Assets/MAN Asset/Laucher.unity
     guid: 2283c61adc63db249bfa6e332ee7ae6c
-  - enabled: 1
+  - enabled: 0
     path: Assets/MAN Asset/RA1.unity
     guid: 70cf207ae6b409c47aa161c139489f68
   - enabled: 0

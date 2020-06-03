@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -3954,7 +3954,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6519485578740062423, guid: 2fff7704ae5185641b92435b1bf2e626, type: 3}
+  - {fileID: 2100000, guid: 68d557bf74149a740ad3fe47ee589040, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4740,7 +4740,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6519485578740062423, guid: 2fff7704ae5185641b92435b1bf2e626, type: 3}
+  - {fileID: 2100000, guid: 68d557bf74149a740ad3fe47ee589040, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5343,7 +5343,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6519485578740062423, guid: 2fff7704ae5185641b92435b1bf2e626, type: 3}
+  - {fileID: 2100000, guid: 68d557bf74149a740ad3fe47ee589040, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
